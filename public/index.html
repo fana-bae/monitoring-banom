@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoring Banom — Program Kerja</title>
+  <meta name="description" content="Sistem monitoring program kerja badan otonom">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Photo Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="this.classList.remove('active')">
+    <img id="lightbox-img" src="" alt="Foto">
+  </div>
+
+  <!-- ═══════════════════════════════ LOGIN VIEW ═══════════════════════════════ -->
+  <div id="view-login" class="login-wrapper">
+    <div class="login-card">
+      <div class="login-logo">
+        <h1>📊 Monitoring Banom</h1>
+        <p>Sistem Monitoring Program Kerja</p>
+      </div>
+      <form id="login-form" onsubmit="return App.login(event)">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="login-user" class="form-input" placeholder="Masukkan username" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="login-pass" class="form-input" placeholder="Masukkan password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" id="login-btn">Masuk</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ APP VIEW ═══════════════════════════════ -->
+  <div id="view-app" class="app-layout hidden">
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger" onclick="App.toggleSidebar()">☰</button>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="App.toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>📊 Monitoring</h2>
+        <p>Program Kerja Banom</p>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-item active" data-page="dashboard" onclick="App.navigate('dashboard')">
+          <span class="nav-icon">📋</span> Dashboard
+        </div>
+        <div class="nav-item" data-page="reports" onclick="App.navigate('reports')">
+          <span class="nav-icon">📝</span> Laporan Proker
+        </div>
+        <div class="nav-item hidden" data-page="users" id="nav-users" onclick="App.navigate('users')">
+          <span class="nav-icon">👥</span> Kelola User
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar">A</div>
+          <div class="user-details">
+            <div class="name" id="user-name">Admin</div>
+            <div class="role" id="user-role">admin</div>
+          </div>
+        </div>
+        <button class="btn btn-logout btn-sm" onclick="App.logout()">🚪 Keluar</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+
+      <!-- ──── DASHBOARD PAGE ──── -->
+      <section id="page-dashboard">
+        <div class="page-header">
+          <h1>Dashboard</h1>
+          <div class="page-header-actions" id="admin-export-btn">
+            <button class="btn btn-success btn-sm" onclick="App.exportExcel()">📥 Export Excel</button>
+          </div>
+        </div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <h2 style="font-size:18px;margin-bottom:16px;">Laporan Terbaru</h2>
+        <div id="recent-reports"></div>
+      </section>
+
+      <!-- ──── REPORTS PAGE ──── -->
+      <section id="page-reports" class="hidden">
+        <div class="page-header">
+          <h1>Laporan Program Kerja</h1>
+          <div class="page-header-actions">
+            <button class="btn btn-primary btn-sm" id="btn-add-report" onclick="App.openReportModal()">＋ Buat Laporan</button>
+          </div>
+        </div>
+        <div class="filter-bar">
+          <input type="text" class="form-input" placeholder="🔍 Cari laporan..." id="filter-search" oninput="App.filterReports()">
+          <select class="form-select" id="filter-status" onchange="App.filterReports()">
+            <option value="">Semua Status</option>
+            <option value="belum">🔴 Belum Berjalan</option>
+            <option value="proses">🟡 Sedang Berjalan</option>
+            <option value="selesai">🟢 Sudah Selesai</option>
+          </select>
+        </div>
+        <div class="reports-list" id="reports-list"></div>
+      </section>
+
+      <!-- ──── USERS PAGE (Admin) ──── -->
+      <section id="page-users" class="hidden">
+        <div class="page-header">
+          <h1>Kelola User</h1>
+          <div class="page-header-actions">
+            <button class="btn btn-primary btn-sm" onclick="App.openUserModal()">＋ Tambah User</button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Banom</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ═══════════════════ MODAL: REPORT ═══════════════════ -->
+  <div class="modal-overlay" id="modal-report">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-report-title">Buat Laporan</h3>
+        <button class="modal-close" onclick="App.closeModal('modal-report')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="report-edit-id">
+        <div class="form-group">
+          <label class="form-label">Judul Program Kerja *</label>
+          <input type="text" class="form-input" id="report-title" placeholder="Contoh: Pelatihan IT Dasar">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Deskripsi</label>
+          <textarea class="form-textarea" id="report-desc" placeholder="Jelaskan detail program kerja..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="report-status">
+            <option value="belum">🔴 Belum Berjalan</option>
+            <option value="proses">🟡 Sedang Berjalan</option>
+            <option value="selesai">🟢 Sudah Selesai</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Foto Bukti</label>
+          <div class="photo-upload-area" id="photo-upload-area" onclick="document.getElementById('report-photo').click()">
+            <input type="file" id="report-photo" accept="image/*" onchange="App.previewPhoto(event)">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Klik untuk upload foto bukti</div>
+          </div>
+          <img id="photo-preview" class="photo-preview hidden" alt="Preview">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="App.closeModal('modal-report')">Batal</button>
+        <button class="btn btn-primary" onclick="App.saveReport()">💾 Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ MODAL: USER ═══════════════════ -->
+  <div class="modal-overlay" id="modal-user">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-user-title">Tambah User</h3>
+        <button class="modal-close" onclick="App.closeModal('modal-user')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="user-edit-id">
+        <div class="form-group">
+          <label class="form-label">Nama Lengkap *</label>
+          <input type="text" class="form-input" id="user-name-input" placeholder="Nama lengkap">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username *</label>
+          <input type="text" class="form-input" id="user-username-input" placeholder="Username untuk login">
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="user-pass-label">Password *</label>
+          <input type="password" class="form-input" id="user-pass-input" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select class="form-select" id="user-role-input">
+            <option value="member">Member</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nama Banom</label>
+          <input type="text" class="form-input" id="user-banom-input" placeholder="Contoh: IT, Humas, Sekretaris">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="App.closeModal('modal-user')">Batal</button>
+        <button class="btn btn-primary" onclick="App.saveUser()">💾 Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ MODAL: DETAIL ═══════════════════ -->
+  <div class="modal-overlay" id="modal-detail">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Detail Laporan</h3>
+        <button class="modal-close" onclick="App.closeModal('modal-detail')">✕</button>
+      </div>
+      <div class="modal-body" id="detail-body"></div>
+      <div class="modal-footer" id="detail-footer"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
