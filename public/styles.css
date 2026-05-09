@@ -140,9 +140,8 @@ body {
 }
 
 .login-logo-img {
-  height: 80px;
+  height: 64px;
   width: auto;
-  margin-left: -10px; /* Offset image padding */
   filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.2));
 }
 
