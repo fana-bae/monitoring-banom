@@ -275,7 +275,7 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
-  z-index: 100;
+  z-index: 400;
   transition: transform 0.3s ease;
 }
 
@@ -291,12 +291,12 @@ body {
 .logo-container-sm {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
 }
 
 .sidebar-logo-img {
-  height: 28px;
+  height: 32px;
   width: auto;
   flex-shrink: 0;
 }
@@ -981,7 +981,7 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 99;
+  z-index: 350;
 }
 
 /* ── Responsive ── */
