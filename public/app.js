@@ -29,7 +29,14 @@ const App = (() => {
 
   function formatDate(d) {
     if (!d) return '-';
-    const dt = new Date(d);
+    // Normalize string to ISO if it's the old SQLite format 'YYYY-MM-DD HH:MM:SS'
+    // This ensures the browser treats it as UTC (since Vercel is UTC)
+    let dateStr = d;
+    if (d.includes(' ') && !d.includes('T')) {
+      dateStr = d.replace(' ', 'T') + 'Z';
+    }
+    const dt = new Date(dateStr);
+    if (isNaN(dt.getTime())) return d;
     return dt.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
 
