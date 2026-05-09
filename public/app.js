@@ -290,11 +290,11 @@ const App = (() => {
       const users = await api('/api/users');
       $('users-tbody').innerHTML = users.map(u => `
         <tr>
-          <td><strong>${esc(u.name)}</strong></td>
-          <td>${esc(u.username)}</td>
-          <td><span class="badge ${u.role === 'admin' ? 'badge-proses' : 'badge-selesai'}">${u.role === 'admin' ? '🛡️ Admin' : '👤 Member'}</span></td>
-          <td>${esc(u.banom || '-')}</td>
-          <td>
+          <td data-label="Nama"><strong>${esc(u.name)}</strong></td>
+          <td data-label="Username">${esc(u.username)}</td>
+          <td data-label="Role"><span class="badge ${u.role === 'admin' ? 'badge-proses' : 'badge-selesai'}">${u.role === 'admin' ? '🛡️ Admin' : '👤 Member'}</span></td>
+          <td data-label="Banom">${esc(u.banom || '-')}</td>
+          <td data-label="Aksi">
             <div class="table-actions">
               <button class="btn btn-ghost btn-sm" onclick='App.editUser(${JSON.stringify(u)})'>✏️</button>
               <button class="btn btn-danger btn-sm" onclick="App.deleteUser(${u.id})">🗑</button>
