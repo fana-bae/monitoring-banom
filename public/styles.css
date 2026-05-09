@@ -117,13 +117,21 @@ body {
   margin-bottom: 32px;
 }
 
-.login-logo h1 {
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.logo-container h1 {
   font-size: 28px;
   font-weight: 800;
   background: linear-gradient(135deg, #60A5FA, #A78BFA);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
+  margin: 0;
 }
 
 .login-logo p {
@@ -132,10 +140,9 @@ body {
 }
 
 .login-logo-img {
-  height: 80px;
+  height: 64px;
   width: auto;
-  margin-bottom: 12px;
-  filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));
+  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.2));
 }
 
 /* ── Form Elements ── */
@@ -277,18 +284,25 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
-.sidebar-header h2 {
+.logo-container-sm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.logo-container-sm h2 {
   font-size: 18px;
   font-weight: 700;
   background: linear-gradient(135deg, #60A5FA, #A78BFA);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  margin: 0;
 }
 
 .sidebar-logo-img {
-  height: 40px;
+  height: 32px;
   width: auto;
-  margin-bottom: 4px;
 }
 
 .sidebar-header p {
