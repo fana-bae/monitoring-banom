@@ -131,6 +131,13 @@ body {
   font-size: 14px;
 }
 
+.login-logo-img {
+  height: 80px;
+  width: auto;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));
+}
+
 /* ── Form Elements ── */
 .form-group {
   margin-bottom: 20px;
@@ -278,10 +285,16 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.sidebar-logo-img {
+  height: 40px;
+  width: auto;
+  margin-bottom: 4px;
+}
+
 .sidebar-header p {
   font-size: 12px;
   color: var(--text-muted);
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 .sidebar-nav {
